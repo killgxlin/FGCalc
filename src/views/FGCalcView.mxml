@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:components="components.*"
+		title="FixGear计算器">
+	<fx:Script>
+		<![CDATA[
+			import spark.events.IndexChangeEvent;
+			
+			private function Calc(_ya:Number , _fei:Number, _rpm:Number, _circle:Number):String
+			{
+				var arr:Array = [];
+				for(var i:Number = 0; i<_fei; ++i)
+					arr.push(0);
+				
+				var testNum:Number = _ya*_fei;
+				for(var j:Number = 0; j<testNum; ++j)
+				{
+					if(j % _ya == 0) arr[j % _fei] = 1;
+				}
+				
+				var ptNum:Number = 0;
+				for(var k:Number = 0; k<_fei; ++k)
+				{
+					if(arr[k] == 1) ptNum++;
+				}
+				
+				
+				var out:String;
+				var rate:Number		= _ya / _fei;
+				var speed:Number	= _rpm * 60 * rate * _circle / 1000 / 100;
+				out = 	"rate:/t" + rate + "/n" + 
+						"kpm:/t" + speed + "/n" +
+						"points:/t" + ptNum;
+				
+				return out;
+			}
+
+			
+			private function button1_clickHandler(event:MouseEvent):void
+			{
+				var arr:Array = [];
+				var _fei:Number = fei.value;
+				var _ya:Number = ya.value;
+				var _rpm:Number = ta.value;
+				
+				for(var i:Number = 0; i<_fei; ++i)
+					arr.push(0);
+				
+				var testNum:Number = _ya*_fei;
+				for(var j:Number = 0; j<testNum; ++j)
+				{
+					if(j % _ya == 0) arr[j % _fei] = 1;
+				}
+				
+				var ptNum:Number = 0;
+				for(var k:Number = 0; k<_fei; ++k)
+				{
+					if(arr[k] == 1) ptNum++;
+				}
+				
+				
+				var out:String;
+				rate.text		= (_ya / _fei).toString();
+				speed.text		= (_rpm * 60 * _ya / _fei * circ_sel.selectedItem.value / 1000 / 100).toString();
+				points.text		= ptNum.toString();				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<s:ArrayList id="circle">
+			<fx:Object value="195" data="26×1(650c) 195cm"/>
+			<fx:Object value="195" data="26×1.25 195cm"/>
+			<fx:Object value="191" data="26×1(559mm) 191cm"/>
+			<fx:Object value="197" data="26×1-1/8 Tubular 197cm"/>
+			<fx:Object value="207" data="26×1-3/8 207cm"/>
+			<fx:Object value="210" data="26×1-1/2 210cm"/>
+			<fx:Object value="200" data="26×1.40 200cm"/>
+			<fx:Object value="199" data="26×1.50 199cm"/>
+			<fx:Object value="202" data="26×1.75 202cm"/>
+			<fx:Object value="205" data="26×1.95 205cm"/>
+			<fx:Object value="206" data="26×2.00 206cm"/>
+			<fx:Object value="207" data="26×2.1 207cm"/>
+			<fx:Object value="207" data="26×2.125 207cm"/>
+			<fx:Object value="208" data="26×2.35 208cm"/>
+			<fx:Object value="215" data="27×1 215cm"/>
+			<fx:Object value="216" data="27×1-1/8 216cm"/>
+			<fx:Object value="216" data="27×1-1/4 216cm"/>
+			<fx:Object value="217" data="27×1-3/8 217cm"/>
+			<fx:Object value="209" data="650×35A 209cm"/>
+			<fx:Object value="212" data="650×38A 212cm"/>
+			<fx:Object value="211" data="650×38B 211cm"/>
+			<fx:Object value="207" data="700×18C 207cm"/>
+			<fx:Object value="209" data="700×19C 209cm"/>
+			<fx:Object value="209" data="700×20C 209cm"/>
+			<fx:Object value="210" data="700×23C 210cm"/>
+			<fx:Object value="211" data="700×25C 211cm"/>
+			<fx:Object value="214" data="700×28C 214cm"/>
+			<fx:Object value="217" data="700×30C 217cm"/>
+			<fx:Object value="216" data="700×32C 216cm"/>
+			<fx:Object value="213" data="700C Tubular 213cm"/>
+			<fx:Object value="217" data="700×35C 217cm"/>
+			<fx:Object value="218" data="700×38C 218cm"/>
+
+		</s:ArrayList>
+	</fx:Declarations>
+	<s:VGroup x="0" y="0" horizontalAlign="justify">
+		<s:HGroup verticalAlign="middle">
+			<s:Label y="1" text="牙盘" textAlign="center" verticalAlign="middle"/>
+			<s:Label width="30" text="{ya.value}" textAlign="center" verticalAlign="middle"/>
+			<s:HSlider id="ya" y="3" width="240" maximum="75" minimum="22" stepSize="1" value="46"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<s:Label y="1" text="飞轮" textAlign="center" verticalAlign="middle"/>
+			<s:Label width="30" text="{fei.value}" textAlign="center" verticalAlign="middle"/>
+			<s:HSlider id="fei" y="3" width="240" maximum="21" minimum="11" stepSize="1" value="17"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<s:Label y="1" text="踏频" textAlign="center" verticalAlign="middle"/>
+			<s:Label width="30" text="{ta.value}" textAlign="center" verticalAlign="middle"/>
+			<s:HSlider id="ta" y="3" width="240" maximum="200" minimum="30" stepSize="10" value="120"/>
+		</s:HGroup>
+		
+		<s:HGroup>
+			<s:Label y="1" text="轮组" textAlign="center" verticalAlign="middle"/>
+			<s:SpinnerListContainer x="-1" y="-76" width="240" height="100">
+				<s:SpinnerList id="circ_sel" width="100%" height="100%"
+							   dataProvider="{circle}"
+							   labelField="data" selectedIndex="25" textAlign="center">
+				</s:SpinnerList>
+			</s:SpinnerListContainer>
+		</s:HGroup>
+		<s:Button label="计算" click="button1_clickHandler(event)"/>
+		<s:HGroup >
+			<s:Label width="50" text="齿比" verticalAlign="top"/>
+			<s:TextArea id="rate" width="250" height="30" editable="false"/>
+		</s:HGroup>
+		<s:HGroup >
+			<s:Label width="50" text="速度" textAlign="left" verticalAlign="top"/>
+			<s:TextArea id="speed" width="250" height="30" enabled="false"/>
+		</s:HGroup>
+		<s:HGroup  >
+			<s:Label width="50" text="磨胎点" textAlign="left" verticalAlign="top"/>
+			<s:TextArea id="points" width="250" height="30" enabled="false"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:View>
